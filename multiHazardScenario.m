@@ -52,7 +52,7 @@ classdef multiHazardScenario
                 if self.hazards{p}.isPrimary == true
                     self.rateEventPool(p) = ...
                         self.hazards{p}.severityCurve(1,2);
-                elseif self.hazards{p}.isPoisson == false
+                elseif self.hazards{p}.isHomogeneus == false
                     self.hazards{p}.indNullEvent = numHazards+1;
                     self.rateEventPool(numHazards+1) = 0;
                     self.hazardNames{numHazards+1} = ...
@@ -82,9 +82,7 @@ classdef multiHazardScenario
             
             ev = 0; self.currentTime = 0;
             while self.currentTime < self.parameters.Analysis.timeHorizon
-                
-                nextEvent = self.simulateNext;                
-                self.currentTime = self.currentTime + nextEvent.time;
+                [nextEvent, self] = self.simulateNext;
                 
                 if nextEvent.type <= numel(self.hazards) % don't save null events
                     ev = ev + 1;
@@ -92,8 +90,8 @@ classdef multiHazardScenario
                     scenario(ev).types = nextEvent.type;
                     scenario(ev).severities = nextEvent.severity;
 
-                    self = self.setRatesSuccessive(nextEvent, ...
-                        self.hazards{nextEvent.type}.drivesSuccessive);
+                    self = self.setRatesAltered(nextEvent, ...
+                        self.hazards{nextEvent.type}.drivesAltered);
 
                     triggeredEvents = self.simulateTriggered(nextEvent, ...
                         self.hazards{nextEvent.type}.drivesTriggered);
@@ -116,12 +114,13 @@ classdef multiHazardScenario
         end
         
         
-        function nextEvent = simulateNext(self)
+        function [nextEvent, self] = simulateNext(self)
             rateNextEvent = sum(self.rateEventPool);
-            nextEvent.time = exprnd(1/rateNextEvent);
+            nextEvent.time = self.currentTime + exprnd(1/rateNextEvent);
+            self.currentTime = nextEvent.time;
 
-            self = self.adjustRateNonPoissonianEvents;
-            probEventPool = self.rateEventPool / rateNextEvent;
+            self = self.adjustRateNonHomogeneusEvents;
+            probEventPool = self.rateEventPool / sum(self.rateEventPool);
 
             nextEvent.type = randsrc(1, 1, ...
                 [1:numel(probEventPool); ...
@@ -137,9 +136,9 @@ classdef multiHazardScenario
         end
 
         
-        function self = adjustRateNonPoissonianEvents(self)
+        function self = adjustRateNonHomogeneusEvents(self)
             for p = 1 : numel(self.hazards)
-                if self.hazards{p}.isPoisson == false && ...
+                if self.hazards{p}.isHomogeneus == false && ...
                         self.hazards{p}.rateAdjusted ~= 0
                     previousRate = self.hazards{p}.rateAdjusted;
                     
@@ -152,10 +151,10 @@ classdef multiHazardScenario
         end
 
 
-        function self = setRatesSuccessive(self, primary, typeSuccessive)
-            if ~isempty(typeSuccessive)
-                indSuccessive = find(strcmp(self.hazardNames, typeSuccessive));
-                for p = indSuccessive
+        function self = setRatesAltered(self, primary, typeAltered)
+            if ~isempty(typeAltered)
+                indAltered = find(strcmp(self.hazardNames, typeAltered));
+                for p = indAltered
                     self.hazards{p}.timePrimary = primary.time;
                     self.hazards{p}.severityPrimary = primary.severity;
 
@@ -173,7 +172,7 @@ classdef multiHazardScenario
 
         function triggered = simulateTriggered(self, primary, typeTriggered)
             %TODO add a time dependency of probTriggered (w/ hazard.update)
-            triggered = primary;
+            triggered = [];
             if ~isempty(typeTriggered)
                 k = 0;
                 indTriggered = find(strcmp(self.hazardNames, typeTriggered));
@@ -184,12 +183,12 @@ classdef multiHazardScenario
                     if rand < probTriggered
                         k = k + 1;
                         triggered(k).type = p;
-                        triggered(k).time = self.currentTime + 0.1*rand; % to avoid updating self.currentTime
+                        triggered(k).time = self.currentTime;
                         triggered(k).severity = ...
                             self.hazards{p}.interpolant(...
                             self.hazards{p}.rateAdjusted*(1-rand) );
                     end
-                end
+                end                
             end
         end
 

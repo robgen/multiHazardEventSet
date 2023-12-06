@@ -43,7 +43,7 @@ MSAS.plotScenario()
 probTriggerPars = [35, 0, 1]; %Parker et al. (2015); [SL, NDS, G]
 
 MS2 = MS;
-MS2.drivesSuccessive = {'Aftershock'};
+MS2.drivesAltered = {'Aftershock'};
 MS2.drivesTriggered = {'Landslide'};
 
 AS2 = AS;

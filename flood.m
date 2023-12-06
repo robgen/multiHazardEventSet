@@ -1,15 +1,15 @@
-classdef mainshock < hazard
+classdef flood < hazard
 
     properties
 
     end
 
     methods
-        function self = mainshock(gutembergRichter)
+        function self = flood(intensityDurationFrequency)
 
-            self.drivesAltered = {'Aftershock'};
+            self.drivesTriggered = {'Landslide'};
             
-            self.severityCurve = gutembergRichter;
+            self.severityCurve = intensityDurationFrequency;
             self.rate = self.severityCurve(1,2);
             self.rateAdjusted = self.severityCurve(1,2);
 

@@ -6,10 +6,10 @@ classdef hazard
         severityCurve
         isPrimary = true
         drivesTriggered = {}
-        drivesSuccessive = {}
+        drivesAltered = {}
         isTriggered = false
-        isSuccessive = false
-        isPoisson = true
+        isAltered = false
+        isHomogeneus = true
         rateVStime = []
         isSlowonset = false
         rateNominalZero = 0.0001
@@ -35,7 +35,7 @@ classdef hazard
         end
 
 
-        function self = buildInterpolant(self)
+        function self = buildSeverityInterpolant(self)
 
         end
 

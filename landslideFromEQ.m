@@ -19,11 +19,11 @@ classdef landslideFromEQ < hazard
             
             self.rateAdjusted = 1;
 
-            self = self.buildInterpolant;
+            self = self.buildSeverityInterpolant;
         end
 
 
-        function self = buildInterpolant(self)
+        function self = buildSeverityInterpolant(self)
             % interpolant that always gives severity = I
             I = 3;
             self.interpolant = ...

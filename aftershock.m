@@ -8,8 +8,8 @@ classdef aftershock < hazard
         function self = aftershock(severityCurve, omoriPar)
 
             self.isPrimary = false;
-            self.isSuccessive = true;
-            self.isPoisson = false;
+            self.isAltered = true;
+            self.isHomogeneus = false;
             
             self.severityCurve = severityCurve;
             self.rate = self.severityCurve(1,2);
@@ -19,7 +19,7 @@ classdef aftershock < hazard
                 (severityPrimary - omoriPar(5)))-10^omoriPar(1) ) / ...
                 ((timeFromPrimary + omoriPar(3))^omoriPar(4));
 
-            self = self.buildInterpolant;
+            self = self.buildSeverityInterpolant;
         end
 
         function self = update(self, currentTime)
@@ -33,7 +33,7 @@ classdef aftershock < hazard
                 self.rateAdjusted = 0;
             end
 
-            self = self.buildInterpolant;
+            self = self.buildSeverityInterpolant;
         end
 
 
@@ -51,7 +51,7 @@ classdef aftershock < hazard
         end
 
 
-        function self = buildInterpolant(self)
+        function self = buildSeverityInterpolant(self)
             % interpolant wants X values in ascending order
             severityCurveAscendingFrequencies = ...
                 flipud(self.severityCurve);
