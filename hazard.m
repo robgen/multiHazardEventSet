@@ -2,7 +2,7 @@ classdef hazard
 
     properties
         name
-        rate
+        rate % this can become a method getRate?
         severityCurve
         isPrimary = true
         drivesTriggered = {}
@@ -15,14 +15,14 @@ classdef hazard
         rateNominalZero = 0.0001
 
         interpolant
-        rateAdjusted
+        rateAdjusted % this can become a method getRate?
         severityCurveAdjusted = []
         indNullEvent = []
         timePrimary = []
         severityPrimary = []
         
-        probTriggered
-        severityThatTriggers
+        probTriggeredFormula
+        severityThatTriggersFormula
     end
 
     properties(Access = 'private')
@@ -37,6 +37,12 @@ classdef hazard
 
         function self = buildSeverityInterpolant(self)
 
+        end
+
+
+        function severity = getSeverity(self)
+            rateMin = self.rateAdjusted;
+            severity = self.interpolant(rateMin*(1-rand));
         end
 
     end

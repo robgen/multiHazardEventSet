@@ -1,22 +1,16 @@
-classdef landslideFromEQ < hazard
+classdef landslideFromRain < hazard
 
     properties
 
     end
 
     methods
-        function self = landslideFromEQ(probTrigParam, severityTriggeringParam)
-            
+        function self = landslideFromRain()
             self.isPrimary = false;
             self.isTriggered = true;
-
-            self.probTriggeredFormula = @(PGA) 1 / ...
-                (1 + exp(-(-7.0207 + 10.9946*PGA + 0.099*probTrigParam(1) + 1.114*probTrigParam(2))));
-
-            R = severityTriggeringParam(1); % GMPEparam
-            self.severityThatTriggersFormula = @(Mw) ... % GMPE
-                0.0159*exp(0.868*Mw)*(R + 0.0606*exp(0.70*Mw))^(-1.09);
             
+            self.severityThatTriggersFormula = @(severity)severity(3); 
+
             self.rateAdjusted = 1;
 
             self = self.buildSeverityInterpolant;
@@ -34,17 +28,17 @@ classdef landslideFromEQ < hazard
 
 
         function isTriggered = checkIfTriggered(self, primarySeverity)
-            severityThatTriggers = ...
-                self.severityThatTriggersFormula(primarySeverity);
+            
+            duration = self.severityThatTriggersFormula(primarySeverity);
 
-            probTriggered = self.probTriggeredFormula(severityThatTriggers);
+            criticalDuration = ... % Liu and Wang, 2022
+                9.00*1000*duration^(-2.149) + 1.61;
 
-            if rand < probTriggered
+            if duration > criticalDuration
                 isTriggered = true;
             else
                 isTriggered = false;
             end
-            
         end
     end
 end

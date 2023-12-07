@@ -51,7 +51,7 @@ classdef multiHazardScenario
             for p = 1 : numHazards
                 if self.hazards{p}.isPrimary == true
                     self.rateEventPool(p) = ...
-                        self.hazards{p}.severityCurve(1,2);
+                        self.hazards{p}.rate;
                 elseif self.hazards{p}.isHomogeneus == false
                     self.hazards{p}.indNullEvent = numHazards+1;
                     self.rateEventPool(numHazards+1) = 0;
@@ -128,10 +128,8 @@ classdef multiHazardScenario
             n = nextEvent.type;
             
             if n <= numel(self.hazards) % no intensity for null events
-                rateMin = self.hazards{n}.rateAdjusted;
                 nextEvent.severity = ...
-                    self.hazards{n}.interpolant(...
-                    rateMin*(1-rand));
+                    self.hazards{n}.getSeverity();
             end
         end
 
@@ -176,11 +174,8 @@ classdef multiHazardScenario
             if ~isempty(typeTriggered)
                 k = 0;
                 indTriggered = find(strcmp(self.hazardNames, typeTriggered));
-                for p = indTriggered
-                    probTriggered = self.hazards{p}.probTriggered(...
-                        self.hazards{p}.severityThatTriggers(primary.severity));
-                    
-                    if rand < probTriggered
+                for p = indTriggered                    
+                    if rand < self.hazards{p}.checkIfTriggered(primary.severity)
                         k = k + 1;
                         triggered(k).type = p;
                         triggered(k).time = self.currentTime;
@@ -198,14 +193,16 @@ classdef multiHazardScenario
             
             scenario = self.simulations(simToPlot).scenario;
             
+            maxBall = 1000; %TODO improve plot
             figure; hold on
             for p = 1 : numel(self.hazards)
                 evToPlot = [scenario.types] == p;
 
                 scatter([scenario(evToPlot).times], ...
                     p * ones(1,numel(scenario(evToPlot))), ...
-                    exp([scenario(evToPlot).severities]), ...
-                    'LineWidth', 1.5) % TODO: b must become the type
+                    maxBall * [scenario(evToPlot).severities] / ...
+                    max([scenario(evToPlot).severities]), ...
+                    'LineWidth', 1.5)
             end
             xlabel(sprintf('Time [%s]', self.parameters.Analysis.timeUnit))
             yticks(1:numel(self.hazards))

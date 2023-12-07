@@ -44,22 +44,36 @@ probTriggerPars = [35, 0, 1]; %Parker et al. (2015); [SL, NDS, G]
 
 MS2 = MS;
 MS2.drivesAltered = {'Aftershock'};
-MS2.drivesTriggered = {'Landslide'};
+MS2.drivesTriggered = {'Landslide (EQ)'};
 
 AS2 = AS;
-AS2.drivesTriggered = {'Landslide'};
+AS2.drivesTriggered = {'Landslide (EQ)'};
 
 distEpicentre = 10; % [km]
-LS = landslideFromEQ(probTriggerPars, distEpicentre);
-LS.name = 'Landslide';
+LSeq = landslideFromEQ(probTriggerPars, distEpicentre);
+LSeq.name = 'Landslide (EQ)';
 
 optionsMSAS = optionsGeneral;
-optionsMSAS.Analysis.hazards = {MS2; AS2; LS};
+optionsMSAS.Analysis.hazards = {MS2; AS2; LSeq};
 
 MSASLS = multiHazardScenario(folderResults, optionsMSAS);
 MSASLS = MSASLS.simulateScenarios(Nsim);
 MSASLS.plotScenario()
 
-%% Earthquakes and Floods
+%% Rain and landslides
 
-% requires defining 3D interpolants in the flood subclass   
+load('IDFexampleData.mat');
+
+R = rain(IDF);
+R.name = 'Rain';
+R.drivesTriggered = {'Landslide (R)'};
+
+LSr = landslideFromRain();
+LSr.name = 'Landslide (R)';
+
+optionsRL = optionsGeneral;
+optionsRL.Analysis.hazards = {R, LSr};
+
+RL = multiHazardScenario(folderResults, optionsRL);
+RL = RL.simulateScenarios(Nsim);
+RL.plotScenario() %TODO fix plot function to deal with severities of different dimension

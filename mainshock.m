@@ -27,5 +27,6 @@ classdef mainshock < hazard
                 severityCurveAscendingFrequencies(:,1), ...
                 'linear', 'none');
         end
+
     end
 end
