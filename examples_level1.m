@@ -76,4 +76,14 @@ optionsRL.Analysis.hazards = {R, LSr};
 
 RL = multiHazardScenario(folderResults, optionsRL);
 RL = RL.simulateScenarios(Nsim);
-RL.plotScenario() %TODO fix plot function to deal with severities of different dimension
+RL.plotScenario()
+
+%% Example in the paper: Mainshock, Aftershock, rain, and landslides
+
+NsimPaper = 25000;
+optionsPaper = optionsGeneral;
+optionsPaper.Analysis.hazards = {MS2, AS2, LSeq, R, LSr};
+
+Paper = multiHazardScenario(folderResults, optionsPaper);
+Paper = Paper.simulateScenarios(NsimPaper);
+Paper.plotScenario()

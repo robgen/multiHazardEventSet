@@ -193,15 +193,19 @@ classdef multiHazardScenario
             
             scenario = self.simulations(simToPlot).scenario;
             
+            for e = numel(scenario) : -1 : 1 %TODO avoid this for loop
+                severitiesForPlot(e) = scenario(e).severities(end);
+            end
+
             maxBall = 1000; %TODO improve plot
             figure; hold on
             for p = 1 : numel(self.hazards)
                 evToPlot = [scenario.types] == p;
-
+                
                 scatter([scenario(evToPlot).times], ...
                     p * ones(1,numel(scenario(evToPlot))), ...
-                    maxBall * [scenario(evToPlot).severities] / ...
-                    max([scenario(evToPlot).severities]), ...
+                    maxBall * severitiesForPlot(evToPlot) / ...
+                    max(severitiesForPlot(evToPlot)), ...
                     'LineWidth', 1.5)
             end
             xlabel(sprintf('Time [%s]', self.parameters.Analysis.timeUnit))

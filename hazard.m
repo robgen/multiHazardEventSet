@@ -35,14 +35,9 @@ classdef hazard
         end
 
 
-        function self = buildSeverityInterpolant(self)
-
-        end
-
-
         function severity = getSeverity(self)
-            rateMin = self.rateAdjusted;
-            severity = self.interpolant(rateMin*(1-rand));
+            severity = self.interpolant(...
+                self.rateAdjusted*(1-rand));
         end
 
     end
