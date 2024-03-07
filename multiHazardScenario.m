@@ -199,7 +199,7 @@ classdef multiHazardScenario
 
             maxBall = 1000; %TODO improve plot
             figure; hold on
-            for p = 1 : numel(self.hazards)
+            for p = unique([scenario.types])
                 evToPlot = [scenario.types] == p;
                 
                 scatter([scenario(evToPlot).times], ...
