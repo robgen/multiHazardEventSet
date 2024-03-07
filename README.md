@@ -8,7 +8,7 @@ The class **hazard** is an interface class defining hazards. Currently, the code
 
 Hazards are defined according the following taxonomy.
 
-![hazardClassification](https://github.com/robgen/multiHazardScenario/blob/main/forReadme/classification.png)
+![hazardClassification](https://github.com/robgen/multiHazardScenario/blob/main/forReadme/Classification.png)
 
 ---
 
@@ -41,4 +41,4 @@ Iannacone, L., Otarola, K., Gentile, R., & Galasso, C. (2024). Simulating multi-
 
 ---
 ## License
-This project is licensed under the terms of the **GNU GPLv3** license. This software is supplied "AS IS" without any warranties and support. The Author assumes no responsibility or liability for the use of the software. The Author reserves the right to make changes in the software without notification.
+This project is licensed under the terms of the **CC0-1.0** license. This software is supplied "AS IS" without any warranties and support. The Author assumes no responsibility or liability for the use of the software. The Author reserves the right to make changes in the software without notification.
