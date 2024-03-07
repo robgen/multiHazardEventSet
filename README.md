@@ -1,4 +1,4 @@
-multiHazardScenario
+multiHazardEventSet
 ============
 [![GitHub Stars](https://img.shields.io/github/stars/robgen/multiHazardScenario.svg)](https://github.com/robgen/multiHazardScenario/stargazers) [![GitHub Issues](https://img.shields.io/github/issues/robgen/multiHazardScenario.svg)](https://github.com/robgen/multiHazardScenario/issues) [![Current Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/robgen/multiHazardScenario)
 
