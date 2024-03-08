@@ -1,4 +1,4 @@
-classdef multiHazardScenario
+classdef multiHazardEventSet
 
     properties
         
@@ -19,7 +19,7 @@ classdef multiHazardScenario
     end
 
     methods
-        function self = multiHazardScenario(folderOutputs, options)
+        function self = multiHazardEventSet(folderOutputs, options)
 
             if nargin == 1, options = struct; end
             self = setAllParameters(self, options);
@@ -266,7 +266,7 @@ classdef multiHazardScenario
         
         function example = runExample(folderResults)
 
-            example = multiHazardScenario(folderResults);
+            example = multiHazardEventSet(folderResults);
 
         end
 

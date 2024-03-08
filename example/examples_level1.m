@@ -1,5 +1,7 @@
 %% General input
 
+addpath(genpath(fileparts(pwd)))
+
 seedNumber = 1;
 resol = 365;
 Nsim = 5;
@@ -19,7 +21,7 @@ MS.name = 'Mainshock';
 optionsMS = optionsGeneral;
 optionsMS.Analysis.hazards = {MS};
 
-MSonly = multiHazardScenario(folderResults, optionsMS);
+MSonly = multiHazardEventSet(folderResults, optionsMS);
 MSonly = MSonly.simulateScenarios(Nsim);
 MSonly.plotScenario()
 
@@ -34,7 +36,7 @@ AS.name = 'Aftershock';
 optionsMSAS = optionsGeneral;
 optionsMSAS.Analysis.hazards = {MS; AS};
 
-MSAS = multiHazardScenario(folderResults, optionsMSAS);
+MSAS = multiHazardEventSet(folderResults, optionsMSAS);
 MSAS = MSAS.simulateScenarios(Nsim);
 MSAS.plotScenario()
 
@@ -56,7 +58,7 @@ LSeq.name = 'Landslide (EQ)';
 optionsMSASLS = optionsGeneral;
 optionsMSASLS.Analysis.hazards = {MS2; AS2; LSeq};
 
-MSASLS = multiHazardScenario(folderResults, optionsMSASLS);
+MSASLS = multiHazardEventSet(folderResults, optionsMSASLS);
 MSASLS = MSASLS.simulateScenarios(Nsim);
 MSASLS.plotScenario()
 
@@ -74,7 +76,7 @@ LSr.name = 'Landslide (R)';
 optionsRL = optionsGeneral;
 optionsRL.Analysis.hazards = {R, LSr};
 
-RL = multiHazardScenario(folderResults, optionsRL);
+RL = multiHazardEventSet(folderResults, optionsRL);
 RL = RL.simulateScenarios(Nsim);
 RL.plotScenario()
 
@@ -84,6 +86,6 @@ NsimPaper = 25; %25000;
 optionsPaper = optionsGeneral;
 optionsPaper.Analysis.hazards = {MS2, AS2, LSeq, R, LSr};
 
-Paper = multiHazardScenario(folderResults, optionsPaper);
+Paper = multiHazardEventSet(folderResults, optionsPaper);
 Paper = Paper.simulateScenarios(NsimPaper);
 Paper.plotScenario()
